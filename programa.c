@@ -95,7 +95,7 @@ void main(){
 		inv[i] = (double*) malloc(m->c*sizeof(double));
 	
 	m->m = (double**) malloc(m->l*sizeof(double*));
-    	for(i = 0; i < c; i++)
+    	for(i = 0; i < m->c; i++)
        		m->m[i] = (double*) malloc(m->c*sizeof(double));
 	
     	pthread_t vetT[m->numt];

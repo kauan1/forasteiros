@@ -21,21 +21,20 @@ void matriz(struct ma *m, char arq[100]){//nessa função faz a inserção de da
 
     	for(i = 0; i < m->l; i++){
 		for(j = 0;j < m->c; j++){
-			fscanf(matriz_real,"%lf",&m->m[(m->c * j) + i]);
+			fscanf(matriz_real,"%lf",&m->m[(m->c * i) + j]);
 		    }
     }
 
     	fclose(matriz_real);//fechamento do arquivo
 }
 
-void *inverter(void *info){//nessa função se gira 90º a matriz inicial
+void *inverter(void *info){//nessa função se gira 90º a matriz inicial	
 	int i, j, k, aux, a = 0;
 	struct ma *m;
 	m = (struct ma*)info;
-    	aux = aux1;
-   	aux1++;
-   	printf("oi %d\n", aux);
- 
+    	aux = aux1;  	
+	aux1++;
+
        	for(i = 0; i < m->c; i++){
         	k = m->c - 1 - aux;
 		for(j = aux; j < m->l; j = j + m->numt){
@@ -45,6 +44,18 @@ void *inverter(void *info){//nessa função se gira 90º a matriz inicial
 		a++;
     	  }
 	pthread_exit(NULL);
+}
+
+void imprimir(double *inv, int l, int c, char arq[100]){
+	int i, j;
+	FILE *matriz;
+	matriz = fopen(arq,"w");
+	for(i=0;i<l;i++){
+		for(j=0;j<c;j++)
+			fprintf(matriz,"%lf\t",inv[(c * i) + j]);
+		fprintf(matriz,"\n");	
+	}
+	fclose(matriz);
 }
 
 /*int apagar(int **n,int **m, int l, int c){
@@ -61,7 +72,7 @@ void *inverter(void *info){//nessa função se gira 90º a matriz inicial
 void main(){
 
     	struct ma *m = (struct ma*) malloc(sizeof(struct ma));
-    	char arq_e[101];
+    	char arq_e[101], arq_s[101];
    
     	printf("Informe os valores das linhas e colunas:\n");
     	scanf("%d", &m->l);
@@ -72,7 +83,10 @@ void main(){
     	printf("Digite o nome do arquivo de entrada: (.txt)\n");
     	fgets(arq_e, 100,stdin);
     	arq_e[strcspn(arq_e, "\n")]=0;
-    	printf("%s\n",arq_e);
+	printf("Digite o nome do arquivo de saida: (.txt)\n");
+    	fgets(arq_s, 100,stdin);
+    	arq_s[strcspn(arq_s, "\n")]=0;
+    	
    
     	int i, j;
 	
@@ -91,6 +105,9 @@ void main(){
     	for(i = 0; i < m->numt; i++){
 		pthread_join(vetT[i], NULL);
 	  }
+
+	imprimir(inv, m->l, m->c, arq_s);
+
     	/*for(i = 0; i < m->l; i++){
         	for(j = 0; j < m->c; j++)
             		printf("%.1lf\t",m->m[(m->c * i) + j]);

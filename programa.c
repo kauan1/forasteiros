@@ -58,35 +58,23 @@ void imprimir(double *inv, int l, int c, char arq[100]){
 	fclose(matriz);
 }
 
-/*int apagar(int **n,int **m, int l, int c){
-    	int i,j;
-    	for(i = 0;i < l;i++){
-        	for(j = 0;j < c;j++){
-            		free(n[j][i]);
-            		free(m[i][j]);
-        }
-    }
-    return 0;
-}*/
+void apagar(double *n,double *m){    	
+       	free(n);
+       	free(m);
+}
 
-void main(){
+void main(int argc, char *argv[]){
 
     	struct ma *m = (struct ma*) malloc(sizeof(struct ma));
-    	char arq_e[101], arq_s[101];
+    	char *arq_e, *arq_s;
    
-    	printf("Informe os valores das linhas e colunas:\n");
-    	scanf("%d", &m->l);
-    	scanf("%d", &m->c);
-    	printf("Informe o numero de threads:\n");
-    	scanf("%d", &m->numt);
-    	getchar();
-    	printf("Digite o nome do arquivo de entrada: (.txt)\n");
-    	fgets(arq_e, 100,stdin);
-    	arq_e[strcspn(arq_e, "\n")]=0;
-	printf("Digite o nome do arquivo de saida: (.txt)\n");
-    	fgets(arq_s, 100,stdin);
+    	m->l = atof(argv[1]);
+    	m->c = atof(argv[2]);
+    	m->numt = atof(argv[3]);
+	arq_e = (argv[4]);
+    	arq_e[strcspn(arq_e, "\n")] = 0;
+	arq_s = (argv[5]);
     	arq_s[strcspn(arq_s, "\n")]=0;
-    	
    
     	int i, j;
 	
@@ -119,5 +107,5 @@ void main(){
             		printf("%.1lf\t",inv[(m->c * i) + j]);
         	printf("\n");
     	}*/
-    //apagar(inv,m->m,m->l,m->c);
+    apagar(inv,m->m);
 }

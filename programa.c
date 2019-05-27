@@ -5,54 +5,54 @@
 #include <pthread.h>
 
 struct ma{
-	double **m;
+	double *m;
 	int l;
 	int c;
 	int numt;
     };
 
-double **inv;
-int aux1=0;
+double *inv;
+int aux1 = 0;
 
-void **matriz(struct ma *m, char arq[100]){//nessa função faz a inserção de dados na matriz
-    int i,j;
-    FILE *matriz_real;
-    matriz_real = fopen(arq, "r");//abertura do arquivo
+void matriz(struct ma *m, char arq[100]){//nessa função faz a inserção de dados na matriz inicial
+    	int i,j;
+    	FILE *matriz_real;
+    	matriz_real = fopen(arq, "r");//abertura do arquivo
 
-    for(i = 0; i < m->l; i++){
-		    for(j = 0;j < m->c; j++){
-			      fscanf(matriz_real,"%lf",&m->m[i][j]);
+    	for(i = 0; i < m->l; i++){
+		for(j = 0;j < m->c; j++){
+			fscanf(matriz_real,"%lf",&m->m[(m->c * j) + i]);
 		    }
     }
 
-    fclose(matriz_real);
+    	fclose(matriz_real);//fechamento do arquivo
 }
 
-void *inverter(void *info){//nessa função se gira 90º a matriz 
-	int i, j, k, a = 0;
+void *inverter(void *info){//nessa função se gira 90º a matriz inicial
+	int i, j, k, aux, a = 0;
 	struct ma *m;
 	m = (struct ma*)info;
-    	int aux = aux1;
+    	aux = aux1;
    	aux1++;
    	printf("oi %d\n", aux);
  
        	for(i = 0; i < m->c; i++){
-        	k = m->l - 1 - aux;
+        	k = m->c - 1 - aux;
 		for(j = aux; j < m->l; j = j + m->numt){
-           		inv[i][j] = m->m[a][k];
+           		inv[(m->c * i) + j] = m->m[(m->c * k) + a];
             		k = k - m->numt;
         	  }
-            	a++;
+		a++;
     	  }
 	pthread_exit(NULL);
 }
 
 /*int apagar(int **n,int **m, int l, int c){
-    int i,j;
-    for(i = 0;i < l;i++){
-        for(j = 0;j < c;j++){
-            free(n[j][i]);
-            free(m[i][j]);
+    	int i,j;
+    	for(i = 0;i < l;i++){
+        	for(j = 0;j < c;j++){
+            		free(n[j][i]);
+            		free(m[i][j]);
         }
     }
     return 0;
@@ -76,13 +76,9 @@ void main(){
    
     	int i, j;
 	
-    	inv = (double**) malloc(m->l*sizeof(double*));
-	for(i = 0; i < m->c; i++)
-		inv[i] = (double*) malloc(m->c*sizeof(double));
+    	inv = (double*) malloc(m->l * m->c * sizeof(double*));
 	
-	m->m = (double**) malloc(m->l*sizeof(double*));
-    	for(i = 0; i < m->c; i++)
-       		m->m[i] = (double*) malloc(m->c*sizeof(double));
+	m->m = (double*) malloc(m->l * m->c * sizeof(double*));
 	
     	pthread_t vetT[m->numt];
 
@@ -95,11 +91,16 @@ void main(){
     	for(i = 0; i < m->numt; i++){
 		pthread_join(vetT[i], NULL);
 	  }
-
-    	for(i = 0;i < m->c;i++){
-        	for(j = 0;j < m->l; j++)
-            		printf("%f\t",inv[i][j]);
+    	/*for(i = 0; i < m->l; i++){
+        	for(j = 0; j < m->c; j++)
+            		printf("%.1lf\t",m->m[(m->c * i) + j]);
         	printf("\n");
-    }
+    	}
+	printf("\n");
+    	for(i = 0; i < m->l; i++){
+        	for(j = 0; j < m->c; j++)
+            		printf("%.1lf\t",inv[(m->c * i) + j]);
+        	printf("\n");
+    	}*/
     //apagar(inv,m->m,m->l,m->c);
 }

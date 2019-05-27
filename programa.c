@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <time.h>
 
 struct ma{
 	double *m;
@@ -67,6 +68,9 @@ void main(int argc, char *argv[]){
 
     	struct ma *m = (struct ma*) malloc(sizeof(struct ma));
     	char *arq_e, *arq_s;
+   	clock_t tempoInicial;
+   	clock_t tempoFinal;
+	double tempoExecucao;
    
     	m->l = atof(argv[1]);
     	m->c = atof(argv[2]);
@@ -85,7 +89,8 @@ void main(int argc, char *argv[]){
     	pthread_t vetT[m->numt];
 
     	matriz(m, arq_e);
-    
+
+    	tempoInicial = clock();
     	for(i = 0; i < m->numt; i++){
 		pthread_create(&vetT[i], NULL, inverter, (void *)m);
 	  }
@@ -93,6 +98,9 @@ void main(int argc, char *argv[]){
     	for(i = 0; i < m->numt; i++){
 		pthread_join(vetT[i], NULL);
 	  }
+	tempoFinal = clock();
+	tempoExecucao = (tempoFinal - tempoInicial) * 1000.0 / CLOCKS_PER_SEC;
+	printf("%lf\n", tempoExecucao);
 
 	imprimir(inv, m->l, m->c, arq_s);
 

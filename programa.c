@@ -17,8 +17,8 @@ int aux1 = 0;//auxiliar para indentificador de threads
 
 void matriz(struct ma *m, char arq[100]){//nessa função faz a inserção de dados na matriz inicial
     	int i,j;
-    	FILE *matriz_real;//cria um arquivo para receber os dados de outro
-    	matriz_real = fopen(arq, "r");//abertura do arquivo
+    	FILE *matriz_real;//cria um ponteiro de arquivo para abrir arquivos
+    	matriz_real = fopen(arq, "r");//abertura do arquivo para leitura
 
     	for(i = 0; i < m->l; i++){
 		for(j = 0;j < m->c; j++){
@@ -50,8 +50,8 @@ void *inverter(void *info){//nessa função se gira 90º a matriz inicial
 
 void imprimir(double *inv, int l, int c, char arq[100]){//função para salva inversão em um arquivo
 	int i, j;
-	FILE *matriz;//arquivo auxiliar
-	matriz = fopen(arq,"w");//abertura do arquivo
+	FILE *matriz;//ponteiro de arquivo
+	matriz = fopen(arq,"w");//abertura do arquivo para escrita
 	for(i=0; i < c; i++){
 		for(j=0; j < l; j++)
 			fprintf(matriz,"%lf\t",inv[(c * i) + j]);//salvando dados nas posições
